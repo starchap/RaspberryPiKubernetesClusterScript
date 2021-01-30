@@ -110,6 +110,13 @@ then
 		curl -sfL http://get.k3s.io | K3S_URL=https://$masternodeip:6443 K3S_TOKEN=$masternodetoken sh -
 	fi
 
+	echo 'Wanna delete you config.sh file, it is recommended? (y/n)'
+	read confirmation22
+	if [ "$confirmation22" == 'y' ]
+	then
+		sudo rm config.sh
+	fi
+
 	echo 'All configured are you ready to reboot your pi? (y/n)'
 	read confirmation2
 	if [ "$confirmation2" == 'y' ]
