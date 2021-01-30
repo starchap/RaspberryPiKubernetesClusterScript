@@ -11,6 +11,12 @@ sudo curl -LO https://raw.githubusercontent.com/starchap/RaspberryPiKubernetesCl
 sudo curl -LO https://raw.githubusercontent.com/starchap/RaspberryPiKubernetesClusterScript/master/config.sh
 ```
 
+Make the kube.sh script executable
+
+```console
+sudo chmod +x ./kube.sh
+```
+
 Edit your configuration for your pi.
 
 ```console
