@@ -69,7 +69,7 @@ then
 	then
 		echo "Configuring node public key"
 		sudo mkdir ./.ssh
-		echo $sshpub >> ./.ssh/authorized_keys
+		sudo bash -c 'echo "$sshpub" > ./.ssh/authorized_keys'
 		sudo chmod 600 ./.ssh/authorized_keys
 		sudo chmod 700 .shh
 		echo "The public ssh key is now in use"
