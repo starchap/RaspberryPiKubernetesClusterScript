@@ -23,7 +23,7 @@ Edit your configuration for your pi.
 sudo nano config.sh
 ```
 
-Lastly execute the kube.sh script, (There are curretly still bugs in the script, however please point them out if you know the solution)
+Lastly execute the kube.sh script
 
 ```console
 sudo ./kube.sh
