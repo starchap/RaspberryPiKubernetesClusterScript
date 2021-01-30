@@ -35,7 +35,7 @@ then
 	fi
 	if [ "$usedusername" != 'pi' ]
 	then
-		echo "You are logged in as $username do you wanna remove the pi user? (y/n)"
+		echo "You are logged in as $usedusername do you wanna remove the pi user? (y/n)"
 		read confirmation12
 		if [ "$confirmation12" == 'y' ]
 		then
@@ -60,8 +60,8 @@ then
 	if [ "$hostname" != '' ]
 	then
 		echo "Configuring node hostname"
-		sudo sed -i "/raspberrypi/$hostname" /etc/hosts
-		sudo sed -i "/raspberrypi/$hostname" /etc/hostname
+		sudo sed -i "s/raspberrypi/$hostname/g" /etc/hosts
+		sudo sed -i "s/raspberrypi/$hostname/g" /etc/hostname
 		echo "The Hostname for this node is now $hostname"
 	fi
 
