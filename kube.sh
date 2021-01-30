@@ -4,7 +4,8 @@ source ./config.sh
 if [ "$configuser" == 'true' ]
 then
 
-	usedusername=$(whoami)
+	usedusername=$(sudo who -u | awk '/pi/ { print $1 }')
+	echo "You are loged in as $usedusername"
 	if [ "$usedusername" == 'pi' ]
 	then
 		echo 'You are using the user pi let us change that? (y/n)'
@@ -53,62 +54,66 @@ then
 	fi
 fi
 
-if [ "$hostname" != '' ]
-then
-	echo "Configuring node hostname"
-	sudo sed -i "/raspberrypi/$hostname" /etc/hosts
-	sudo sed -i "/raspberrypi/$hostname" /etc/hostname
-	echo "The Hostname for this node is now $hostname"
-fi
 
-if [ "$sshpub" != '' ]
+if [ "$configuser" == 'false' ]
 then
-	echo "Configuring node public key"
-	sudo mkdir ./.ssh
-	echo $sshpub >> ./.ssh/authorized_keys
-	sudo chmod 600 ./.ssh/authorized_keys
-	sudo chmod 700 .shh
-	echo "The public ssh key is now in use"
-fi
+	if [ "$hostname" != '' ]
+	then
+		echo "Configuring node hostname"
+		sudo sed -i "/raspberrypi/$hostname" /etc/hosts
+		sudo sed -i "/raspberrypi/$hostname" /etc/hostname
+		echo "The Hostname for this node is now $hostname"
+	fi
 
-if [ "$preventpass" != 'false' ]
-then
-	echo "Configuring node to login only using public key"
-	sudo sed -i "/PasswordAuthentication/c\PasswordAuthentication no" /etc/ssh/sshd_config
-	echo "Use the private ssh key to access $(echo )"
-fi
+	if [ "$sshpub" != '' ]
+	then
+		echo "Configuring node public key"
+		sudo mkdir ./.ssh
+		echo $sshpub >> ./.ssh/authorized_keys
+		sudo chmod 600 ./.ssh/authorized_keys
+		sudo chmod 700 .shh
+		echo "The public ssh key is now in use"
+	fi
 
-if [ "$staticip" != '' ]
-then
-	echo "Configuring node static IP address"
-	ethernet=$(ip r | awk '/default/ { print $5 }')
-	gateway=$(ip r | awk '/default/ { print $3 }')
-	domainservers=$(sudo grep 'nameserver' /etc/resolv.conf | awk '/nameserver/ {print $2}' | tr -d '\n')
-	echo "interface $(echo $ethernet)" >> /etc/dhcpcd.conf
-	echo "static ip_address=$staticip/24" >> /etc/dhcpcd.conf
-	echo "static routers=$gateway" >> /etc/dhcpcd.conf
-	echo "static domain_name_servers=$domainservers" >> /etc/dhcpcd.conf
-	echo "The node now has a static IP address $staticip"
-fi
+	if [ "$preventpass" != 'false' ]
+	then
+		echo "Configuring node to login only using public key"
+		sudo sed -i "/PasswordAuthentication/c\PasswordAuthentication no" /etc/ssh/sshd_config
+		echo "Use the private ssh key to access $(echo )"
+	fi
+
+	if [ "$staticip" != '' ]
+	then
+		echo "Configuring node static IP address"
+		ethernet=$(ip r | awk '/default/ { print $5 }')
+		gateway=$(ip r | awk '/default/ { print $3 }')
+		domainservers=$(sudo grep 'nameserver' /etc/resolv.conf | awk '/nameserver/ {print $2}' | tr -d '\n')
+		echo "interface $(echo $ethernet)" >> /etc/dhcpcd.conf
+		echo "static ip_address=$staticip/24" >> /etc/dhcpcd.conf
+		echo "static routers=$gateway" >> /etc/dhcpcd.conf
+		echo "static domain_name_servers=$domainservers" >> /etc/dhcpcd.conf
+		echo "The node now has a static IP address $staticip"
+	fi
 
 
-if [ "$ismasternode" == 'true' ]
-then
-	echo "The node will become a master node"
-	curl -sfL https://get.k3s.io | sh - 
-	echo "Connect your nodes using the following token"
-	sudo cat /var/lib/rancher/k3s/server/node-token
-elif [ "$ismasternode" == 'false' ] && [ "$masternodetoken" != '' ] && [ "$masternodetoken" != '' ]
-then
-	echo "The node will become a worker node"
-	echo "NOTE: The Worker label must be assigned from the master node using"
-	echo "kubectl label node $nodename node-role.kubernetes.io/worker=worker"
-	curl -sfL http://get.k3s.io | K3S_URL=https://$masternodeip:6443 K3S_TOKEN=$masternodetoken sh -
-fi
+	if [ "$ismasternode" == 'true' ]
+	then
+		echo "The node will become a master node"
+		curl -sfL https://get.k3s.io | sh - 
+		echo "Connect your nodes using the following token"
+		sudo cat /var/lib/rancher/k3s/server/node-token
+	elif [ "$ismasternode" == 'false' ] && [ "$masternodetoken" != '' ] && [ "$masternodetoken" != '' ]
+	then
+		echo "The node will become a worker node"
+		echo "NOTE: The Worker label must be assigned from the master node using"
+		echo "kubectl label node $nodename node-role.kubernetes.io/worker=worker"
+		curl -sfL http://get.k3s.io | K3S_URL=https://$masternodeip:6443 K3S_TOKEN=$masternodetoken sh -
+	fi
 
-echo 'All configured are you ready to reboot your pi? (y/n)'
-read confirmation2
-if [ "$confirmation2" == 'y' ]
-then
-	sudo reboot
+	echo 'All configured are you ready to reboot your pi? (y/n)'
+	read confirmation2
+	if [ "$confirmation2" == 'y' ]
+	then
+		sudo reboot
+	fi
 fi
