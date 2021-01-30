@@ -17,7 +17,7 @@ then
 			read newusername
 			sleep 1
 			echo "Adding user $newusername"
-			sudo adduser $newusername
+			sudo adduser --disabled-password --gecos "" $newusername
 			sleep 1
 			echo "Adding user privileges to $newusername"
 			sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi $newusername
@@ -26,7 +26,7 @@ then
 			sudo passwd $newusername
 			sleep 1
 			echo "Clone pi content to new user"
-			su root -c "sudo cp /home/pi/FNAME /home/$newusername/FNAME && sudo chown $newusername:$newusername /home/$newusername/FNAME"
+			su root -c "sudo cp -avr /home/pi/* /home/$newusername/"
 			sleep 1
 			echo 'Logout and login as new user please..'
 			sleep 3
