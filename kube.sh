@@ -1,31 +1,59 @@
 #!/bin/bash
 source ./config.sh
 
-if [ $configuser == "true" ]
+if [ "$configuser" == 'true' ]
 then
-	echo 'It is recomended to change the user pi username and password wanna configure it now? (y/n)'
-	read confirmation1
-	if [ $confirmation1 == 'y' ]
+
+	usedusername=$(whoami)
+	if [ "$usedusername" == 'pi' ]
 	then
-		echo 'Please enter new username'
-		su root -c "read loginname"
-		echo "Setting up new account login name as: $loginname"
-		su root -c "usermod -l $loginname -d /home/$loginname -m pi"
-		su root -c "groupmod --new-name $loginname pi"
-		echo 'What is your realname?'
-		su root -c "read realname"
-		su root -c "usermod -c "$realname" $loginname"
-		echo "Now to set new password for $realname aka $loginname"
-		su root -c "passwd $loginname"
-		echo "all done please reboot and login as $loginname"
-		echo 'locking root account'
-		su root -c "passwd -l root"
-		echo 'now logging out in:'
-		sudo logout
+		echo 'You are using the user pi let us change that? (y/n)'
+		read confirmation11
+		if [ "$confirmation11" == 'y' ]
+		then
+			echo "Creating new user"
+			echo "Enter Username"
+			read newusername
+			sleep 1
+			echo "Adding user $newusername"
+			sudo adduser $newusername
+			sleep 1
+			echo "Adding user privileges to $newusername"
+			sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi $newusername
+			sleep 1
+			echo "Please enter a password for $newusername"
+			sudo passwd $newusername
+			sleep 1
+			echo "Clone pi content to new user"
+			su root -c "sudo cp /home/pi/FNAME /home/$newusername/FNAME && sudo chown $newusername:$newusername /home/$newusername/FNAME"
+			sleep 1
+			echo 'Logout and login as new user please..'
+			sleep 3
+			sudo logout
+		fi
+	fi
+	if [ "$usedusername" != 'pi' ]
+	then
+		echo "You are logged in as $username do you wanna remove the pi user? (y/n)"
+		read confirmation12
+		if [ "$confirmation12" == 'y' ]
+		then
+			echo "Isolating the pi user"
+			sudo pkill -u pi
+			sleep 1
+			echo "getting rid of the body"
+			sudo deluser pi
+			sleep 1
+			echo "getting rid of the pi users home"
+			sudo deluser -remove-home pi
+			sleep 1
+			echo "The pi user is no more"
+		fi
+		
 	fi
 fi
 
-if [ $hostname != "" ]
+if [ "$hostname" != '' ]
 then
 	echo "Configuring node hostname"
 	sudo sed -i "/raspberrypi/$hostname" /etc/hosts
@@ -33,7 +61,7 @@ then
 	echo "The Hostname for this node is now $hostname"
 fi
 
-if [ "$sshpub" != "" ]
+if [ "$sshpub" != '' ]
 then
 	echo "Configuring node public key"
 	sudo mkdir ./.ssh
@@ -43,14 +71,14 @@ then
 	echo "The public ssh key is now in use"
 fi
 
-if [ $preventpass != "false" ]
+if [ "$preventpass" != 'false' ]
 then
 	echo "Configuring node to login only using public key"
 	sudo sed -i "/PasswordAuthentication/c\PasswordAuthentication no" /etc/ssh/sshd_config
 	echo "Use the private ssh key to access $(echo )"
 fi
 
-if [ $staticip != "" ]
+if [ "$staticip" != '' ]
 then
 	echo "Configuring node static IP address"
 	ethernet=$(ip r | awk '/default/ { print $5 }')
@@ -64,13 +92,13 @@ then
 fi
 
 
-if [ $ismasternode == "true" ]
+if [ "$ismasternode" == 'true' ]
 then
 	echo "The node will become a master node"
 	curl -sfL https://get.k3s.io | sh - 
 	echo "Connect your nodes using the following token"
 	sudo cat /var/lib/rancher/k3s/server/node-token
-else if [ $ismasternode == "false" && $masternodetoken != "" && $masternodetoken != "" ]
+elif [ "$ismasternode" == 'false' ] && [ "$masternodetoken" != '' ] && [ "$masternodetoken" != '' ]
 then
 	echo "The node will become a worker node"
 	echo "NOTE: The Worker label must be assigned from the master node using"
@@ -80,7 +108,7 @@ fi
 
 echo 'All configured are you ready to reboot your pi? (y/n)'
 read confirmation2
-if [ $confirmation2 == 'y' ]
+if [ "$confirmation2" == 'y' ]
 then
 	sudo reboot
 fi
