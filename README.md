@@ -1,6 +1,6 @@
 # Raspberry pi Kubernetes Cluster Script
 
-> :disclaimer: **If you are using it on a already configured Pi**: Be very careful here!
+> :warning: **If you are using it on a already configured Pi**: Be very careful here!
 This script is recommended to use on a clean installation of the Raspberry pi OS. Using it on a already configured Pi has not been tested and might cause your already configured Pi's to misbehave.
 
 Setting up your raspberry pi's to run kubernetes can take some time, the goal of this repo is to shorten that time with a simple script
