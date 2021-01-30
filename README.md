@@ -22,9 +22,3 @@ Lastly execute the kube.sh script, (There are curretly still bugs in the script,
 ```console
 sudo ./kube.sh
 ```
-
-Enable the kube script by entering the following
-
-```console
-sudo chmod +x ./kube.sh
-```
