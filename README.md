@@ -4,11 +4,11 @@ Setting up your raspberry pi's to run kubernetes can take some time, the goal of
 Simply run the following commands from each of your pi's
 
 ```console
-curl -LO https://raw.githubusercontent.com/starchap/RaspberryPiKubernetesClusterScript/master/kube.sh
+sudo curl -LO https://raw.githubusercontent.com/starchap/RaspberryPiKubernetesClusterScript/master/kube.sh
 ```
 
 ```console
-curl -LO https://raw.githubusercontent.com/starchap/RaspberryPiKubernetesClusterScript/master/config.sh
+sudo curl -LO https://raw.githubusercontent.com/starchap/RaspberryPiKubernetesClusterScript/master/config.sh
 ```
 
 Edit your configuration for your pi.
