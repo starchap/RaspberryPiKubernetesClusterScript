@@ -17,14 +17,14 @@ Edit your configuration for your pi.
 sudo nano config.sh
 ```
 
-Enable the kube script by entering the following
-
-```console
-sudo chmod +x ./kube.sh
-```
-
 Lastly execute the kube.sh script, (There are curretly still bugs in the script, however please point them out if you know the solution)
 
 ```console
 sudo ./kube.sh
+```
+
+Enable the kube script by entering the following
+
+```console
+sudo chmod +x ./kube.sh
 ```
