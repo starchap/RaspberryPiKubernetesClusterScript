@@ -69,7 +69,7 @@ then
 	then
 		echo "Configuring node public key"
 		sudo mkdir ./.ssh
-		echo $sshpub > ./.ssh/authorized_keys
+		echo "$sshpub" >> ./.ssh/authorized_keys
 		sudo chmod 600 ./.ssh/authorized_keys
 		sudo chmod 700 .shh
 		echo "The public ssh key is now in use"
@@ -78,7 +78,7 @@ then
 	if [ "$preventpass" != 'false' ]
 	then
 		echo "Configuring node to login only using public key"
-		sudo sed -i "/PasswordAuthentication/c\PasswordAuthentication no" /etc/ssh/sshd_config
+		sudo sed -i "/#PasswordAuthentication yes/c\PasswordAuthentication no" /etc/ssh/sshd_config
 		echo "Use the private ssh key to access $(echo )"
 	fi
 
