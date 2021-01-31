@@ -43,5 +43,5 @@ sudo nano config.sh
 Lastly execute the kube.sh script
 
 ```console
-sudo ./kube.sh
+./kube.sh
 ```
