@@ -26,7 +26,7 @@ then
 			sudo passwd $newusername
 			sleep 1
 			echo "Clone pi content to new user"
-			su root -c "sudo cp -avr /home/pi/* /home/$newusername/"
+			sudo cp -avr /home/pi/* /home/$newusername/
 			sleep 1
 			echo 'Logout and login as new user please..'
 			sleep 3
