@@ -3,7 +3,13 @@ source ./config.sh
 
 usedusername=$(sudo who -u | awk '{ print $1 }')
 
-if [ "$configuser" == 'true' ]
+echo 'Please enter a number corresponding to the action you want to carry out'
+echo '1 ) Create new user and remove the existing pi user'
+echo '2 ) Setup static IP, hostname and SSH public key'
+echo '3 ) Setup kubernetes'
+read action
+
+if [ "$action" == '1' ]
 then
 	echo "You are loged in as $usedusername"
 	if [ "$usedusername" == 'pi' ]
@@ -29,7 +35,6 @@ then
 			sudo cp -avr /home/pi/* /home/$newusername/
 			sleep 1
 			echo 'Logout and login as new user please..'
-			sleep 3
 			sudo logout
 		fi
 	fi
@@ -39,23 +44,22 @@ then
 		read confirmation12
 		if [ "$confirmation12" == 'y' ]
 		then
-			echo "Isolating the pi user"
+			echo "killing processes related to the user pi"
 			sudo pkill -u pi
 			sleep 1
-			echo "getting rid of the body"
+			echo "deleting user pi"
 			sudo deluser pi
 			sleep 1
-			echo "getting rid of the pi users home"
+			echo "removing the pi users home folder"
 			sudo deluser -remove-home pi
 			sleep 1
-			echo "The pi user is no more"
+			echo "The pi user has been successfully removed"
 		fi
 		
 	fi
 fi
 
-
-if [ "$configuser" == 'false' ]
+if [ "$action" == '2' ]
 then
 	if [ "$hostname" != '' ]
 	then
@@ -94,8 +98,10 @@ then
 		echo "static domain_name_servers=$domainservers" >> /etc/dhcpcd.conf
 		echo "The node now has a static IP address $staticip"
 	fi
+fi
 
-
+if [ "$action" == '3' ]
+then
 	if [ "$ismasternode" == 'true' ]
 	then
 		echo "The node will become a master node"
@@ -109,18 +115,20 @@ then
 		echo "kubectl label node $nodename node-role.kubernetes.io/worker=worker"
 		curl -sfL http://get.k3s.io | K3S_URL=https://$masternodeip:6443 K3S_TOKEN=$masternodetoken sh -
 	fi
-
-	echo 'Wanna delete you config.sh file, it is recommended? (y/n)'
-	read confirmation22
-	if [ "$confirmation22" == 'y' ]
-	then
-		sudo rm config.sh
-	fi
-
-	echo 'All configured are you ready to reboot your pi? (y/n)'
-	read confirmation2
-	if [ "$confirmation2" == 'y' ]
-	then
-		sudo reboot
-	fi
 fi
+
+echo 'Wanna delete you config.sh file, it is recommended? (y/n)'
+read confirmation22
+if [ "$confirmation22" == 'y' ]
+then
+	sudo rm config.sh
+fi
+
+
+echo 'All configured are you ready to reboot your pi? (y/n)'
+read confirmation2
+if [ "$confirmation2" == 'y' ]
+then
+	sudo reboot
+fi
+	

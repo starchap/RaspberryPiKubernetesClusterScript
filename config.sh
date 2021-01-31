@@ -1,9 +1,7 @@
 #!/bin/bash
-configuser='false'
-nodename='pinode0'
-hostname='pinode0'
+hostname='nodeX'
 sshpub=''
-preventpass='true'
+preventpass='false'
 staticip='xxx.xxx.xx.xxx'
 ismasternode='true'
 masternodeip=''
