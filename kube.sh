@@ -1,10 +1,10 @@
 #!/bin/bash
 source ./config.sh
 
+usedusername=$(sudo who -u | awk '/pi/ { print $1 }')
+
 if [ "$configuser" == 'true' ]
 then
-
-	usedusername=$(sudo who -u | awk '/pi/ { print $1 }')
 	echo "You are loged in as $usedusername"
 	if [ "$usedusername" == 'pi' ]
 	then
@@ -68,10 +68,10 @@ then
 	if [ "$sshpub" != '' ]
 	then
 		echo "Configuring node public key"
-		sudo mkdir ./.ssh
-		echo $sshpub >> ./.ssh/authorized_keys
-		chmod 700 ~/.ssh
-		chmod 600 ~/.ssh/authorized_keys
+		sudo mkdir /home/$usedusername/.ssh
+		sudo echo $sshpub >> /home/$usedusername/.ssh/authorized_keys
+		sudo chmod 700 /home/$usedusername/.ssh
+		sudo chmod 600 /home/$usedusername/.ssh/authorized_keys
 		echo "The public ssh key is now in use"
 	fi
 
