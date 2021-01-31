@@ -71,7 +71,7 @@ then
 		sudo mkdir ./.ssh
 		echo $sshpub >> ./.ssh/authorized_keys
 		chmod 700 ~/.ssh
-		sudo chmod 600 ./.ssh/authorized_keys
+		chmod 600 ~/.ssh/authorized_keys
 		echo "The public ssh key is now in use"
 	fi
 
