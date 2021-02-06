@@ -29,8 +29,6 @@ sudo nano config.sh
 
 | Key             | Type                   | Description                                                                                                                 |
 |-----------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| configuser      | boolean (true | false) | whether to configure a new user, setting this to true will enable the creation of a new user and remove the default pi user |
-| nodename        | string                 | Name of your node on the kubernetes cluster                                                                                 |
 | hostname        | string                 | Name of the Pi's hostname, used on the network                                                                              |
 | sshpub          | string                 | Assign a public key to use over SSH, you can use the private key to login                                                   |
 | preventpass     | boolean (true | false) | Prevent ssh login using password, you must use the private key to login                                                     |
