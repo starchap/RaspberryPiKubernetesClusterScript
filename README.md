@@ -38,8 +38,15 @@ sudo nano config.sh
 | masternodetoken | string                 | (ismasternode=false) Sign up worker for a master node using TOKEN                                                           |
 
 
-Lastly execute the kube.sh script
+
+Lastly execute the kube.sh script and select one of the 3 options.
 
 ```console
 ./kube.sh
 ```
+
+1. Option adds a new user to the raspberry pi, using this command is a 2 step process you must enter a username and password thereafter login as that user and run the script again with option 1 will enable you to delete the default pi user.
+
+2. Option adds a static IP address, hostname and applies a public key to the ssh connection if any is defined in the config.sh otherwise it skips the configuration of it. note that "preventpass" must be false when you do not use a public key otherwise leave it as true.
+
+3. Option setup's Kubernetes on the raspberry pi, either as a master or a worker, if you are configuring a working it is important to fill the Ip for the master node and the token it has to apply in order to connect.
